@@ -4,17 +4,24 @@ require 'cult_of_gems/cult_of_gems'
 ##
 # In-game activity
 #
-class CultOfGemsGameViewActivity
+class CultOfGemsActivity
   def on_create(bundle)
     super(bundle)
+    puts "[CULT OF GEMS] Init Gosu...."
     Gosu::AndroidInitializer.instance.start(self)
+    puts "[CULT OF GEMS] Gosu initialized."
   rescue Exception => e
     log_exception(e)
   end  
   
   def on_ready
+    puts "[CULT OF GEMS] [#{self.class.to_s}] Ready..."
+
     window = CultOfGems::GameWindow.new
-    window.show    
+    puts "[CULT OF GEMS] [#{self.class.to_s}] Set..."
+    window.show
+    puts "[CULT OF GEMS] [#{self.class.to_s}] GO!!!!"
+
   rescue Exception => e
     log_exception(e)
   end
@@ -64,10 +71,3 @@ class CultOfGemsMainMenuActivity
 
 end
 
-
-start_immediately = true
-if start_immediately then
-  class CultOfGemsActivity < CultOfGemsGameViewActivity ; end
-else
-  class CultOfGemsActivity < CultOfGemsMainMenuActivity ; end
-end
