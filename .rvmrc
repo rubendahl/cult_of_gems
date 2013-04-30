@@ -1,0 +1,4 @@
+rvm use 1.9.3@ruboto
+
+# source ~/bin/env_android_dev.sh
+
