@@ -1,4 +1,6 @@
-rvm use 1.9.3@ruboto
+rvm use --create 1.9.3@ruboto
 
-# source ~/bin/env_android_dev.sh
+
+# Local modifications...
+source ~/bin/env_android_dev.sh
 
