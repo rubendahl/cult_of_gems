@@ -9,6 +9,7 @@ class CultOfGemsActivity
     super(bundle)
     puts "[CULT OF GEMS] Init Gosu...."
     Gosu::AndroidInitializer.instance.start(self)
+    toast "Curiosity ...  killed the cat."
     puts "[CULT OF GEMS] Gosu initialized."
   rescue Exception => e
     log_exception(e)
@@ -17,6 +18,7 @@ class CultOfGemsActivity
   def on_ready
     puts "[CULT OF GEMS] [#{self.class.to_s}] Ready..."
 
+    toast "Get ready!"
     window = CultOfGems::GameWindow.new
     puts "[CULT OF GEMS] [#{self.class.to_s}] Set..."
     window.show

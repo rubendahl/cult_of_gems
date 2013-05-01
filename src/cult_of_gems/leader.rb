@@ -1,6 +1,7 @@
 module CultOfGems  
   class Leader
     attr_reader :followers, :score, :max_score
+    attr_reader :x, :y
 
     attr_accessor :intent, :impulse
 

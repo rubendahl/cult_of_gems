@@ -26,13 +26,15 @@ module CultOfGems
     include Gosu
     if defined?(Ruboto)
       GAME_TILES = Ruboto::R::drawable::gametiles
+      BACKGROUND = Ruboto::R::drawable::background
       KEY_MAP = {
         :left   => [ KbLeft  ],
         :right  => [ KbRight ],
         :back   => [ KbEscape ]
       }
     else
-      GAME_TILES = 'res/drawable/gametiles.png'
+      GAME_TILES = 'res/drawable-nodpi/gametiles.png'
+      BACKGROUND = 'res/drawable-nodpi/background.png'
       KEY_MAP = {
         :left   => [ Gosu::KbLeft  ],
         :right  => [ Gosu::KbRight ],
@@ -98,6 +100,7 @@ module CultOfGems
     def self.generate_random(game)
       x = rand(game.map.width)
       y = rand(game.map.height)
+      return nil if (x-game.player.x)**2 + (y-game.player.y)**2 < 16  
       self.new(game, x, y, game.images[@image_type], @layer_level) unless game.map.blocked?(x,y)
     end
 

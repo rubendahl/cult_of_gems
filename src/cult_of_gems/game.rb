@@ -24,8 +24,10 @@ module CultOfGems
 
       @images = Gosu::Image.load_tiles(@window, GameResources::GAME_TILES, -5, -5, true)
       @font = Gosu::Font.new(@window, Gosu::default_font_name, 20)
-      @background = @window.record(@window.width, @window.height){ self.create_background } # , GameResources::SPRITES, true) 
-      ### @background.save("res/drawable/background-cached.png") if @background && !defined?(Ruboto)
+
+      # @background = Gosu::Image.new(@window, GameResources::BACKGROUND, true)
+      # @background = @window.record(@window.width, @window.height){ self.create_background }
+      # @background.save("res/drawable/background-cached.png") if @background && !defined?(Ruboto)
 
       @player = Leader.new(self, @images[0])
       @player.warp(@grid_width/2 - 1, @grid_height -1)
@@ -59,8 +61,7 @@ module CultOfGems
 
     def draw
       # puts "[CULT OF GEMS] [#{self.class.to_s}] Draw..."
-      @background.draw(0,0,LayerOrder::Background) if @background
-      #create_background
+      #@background.draw(0,0,LayerOrder::Background) if @background
       @player.draw
       @victims.each{|f| f.draw }
       @gems.each{|f| f.draw }

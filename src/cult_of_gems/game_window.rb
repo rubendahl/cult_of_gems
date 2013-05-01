@@ -16,7 +16,7 @@ module CultOfGems
 
     def draw
       @game.draw
-      draw_buttons
+      # draw_buttons
     end
 
 
@@ -63,17 +63,16 @@ module CultOfGems
 
 
       self.draw_triangle(
-          5,      midy,   0xFF00FF00 & lcol, 
-          midx-5, topy,   0xFF0000FF & lcol, 
-          midx-5, height, 0xFFFF0000 & lcol,
+          5,      midy,   0xFFFF0000 & lcol, 
+          midx-5, topy,   0xFFFFBBBB & lcol, 
+          midx-5, height, 0xFFFF4444 & lcol,
           LayerOrder::UI )
 
       self.draw_triangle(
-          width-5,  midy,   0xFF00FF00 & rcol, 
-          midx+5,   topy,   0xFFFF0000 & rcol, 
-          midx+5,   height, 0xFF0000FF & rcol,
+          width-5,  midy,   0xFFFF0000 & rcol, 
+          midx+5,   topy,   0xFFFFBBBB & rcol, 
+          midx+5,   height, 0xFFFF4444 & rcol,
           LayerOrder::UI )
-
     end
 
   end
