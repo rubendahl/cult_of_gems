@@ -45,10 +45,12 @@ module CultOfGems
     Background, Walls, Gems, NPC, Followers, Leader, UI = *0..7
   end
 
-  class Follower
+
+  class Entity
     attr_accessor :x, :y, :image
     attr_reader :active
-    def initialize(game, x, y, image = nil)
+
+    def initialize(game, x, y, image = nil, layer = nil)
       @game = game
       @x = x
       @y = y
@@ -56,14 +58,82 @@ module CultOfGems
       self.active = true
     end
 
+    def warp(x,y)
+      old_active = active
+      self.active = false
+      @x = x
+      @y = y
+      self.active = old_active
+    end
+
+
+    alias :active? active
+
     def active=(active)
+      @game.map.set(@x, @y, (active ? self : nil)) unless @active == active
       @active = active
-      @game.map.set(@x, @y, (@active ? self : nil))
     end
 
     def draw
       @image.draw(self.x * @game.tile_width, self.y * @game.tile_height, LayerOrder::Followers) if @active
     end
+
+    def consumable?
+      false
+    end
+
+    def consumed_by?(other)
+      return false unless consumable?
+      was_consumed = other && other.consume(self)
+      self.active = !was_consumed
+      was_consumed
+    end
+
+    def consume_score
+      10
+    end
+  end
+
+  class Consumable < Entity
+    def self.generate_random(game)
+      x = rand(game.map.width)
+      y = rand(game.map.height)
+      self.new(game, x, y, game.images[@image_type], @layer_level) unless game.map.blocked?(x,y)
+    end
+
+    def consumable?
+      true
+    end
+
+    def consume_score
+      100
+    end
+
+  end
+
+  class Victim < Consumable
+    @image_type = 2
+    @layer_level = LayerOrder::NPC
+    def consume_score
+      1000
+    end
+
+    def num_new_followers
+      5
+    end
+
+  end
+
+  class Gem < Consumable
+    @layer_level = LayerOrder::Gems
+    @image_type = 5
+    def consume_score
+      5000
+    end
+
+  end
+
+  class Follower < Entity
   end
 
   class Following

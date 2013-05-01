@@ -11,7 +11,7 @@ module CultOfGems
     end
 
     def update
-      @game.player.update
+      @game.update
     end
 
     def draw

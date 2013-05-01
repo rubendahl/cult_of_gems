@@ -35,11 +35,35 @@ module CultOfGems
 
     end
 
+
+    def update
+      @player.update
+
+      if rand(100) < 20 && @victims.size < 32
+        @victims.delete_if{|i| !i.active }
+        victim = Victim.generate_random(self)
+        @victims << victim if victim
+      else 
+        @victims.delete_if{|i| !i.active }
+      end
+
+      if rand(100) < 10 && @gems.size < 8
+        @gems.delete_if{|i| !i.active }
+        gem = Gem.generate_random(self)
+        @gems << gem if gem
+      end
+
+    end
+
+
     def draw
       # puts "[CULT OF GEMS] [#{self.class.to_s}] Draw..."
       @background.draw(0,0,LayerOrder::Background)
       #create_background
       @player.draw
+      @victims.each{|f| f.draw }
+      @gems.each{|f| f.draw }
+
 
       score_str = "Score: #{@player.score} - Record: #{@player.max_score}"
       @font.draw( score_str, 1, 1, LayerOrder::UI, 1.5, 1.5, 0xff000000 )
@@ -53,7 +77,7 @@ module CultOfGems
 
 
     def create_background
-      border_img = @images[2]
+      border_img = @images[6]
       mx = (@grid_width  + 1) << @tile_width_shift
       my = (@grid_height + 1) << @tile_height_shift
 
@@ -74,7 +98,7 @@ module CultOfGems
 
 
   class Map
-    attr_reader :game
+    attr_reader :game, :width, :height
     def initialize(game, width, height)
       @width  = width
       @height = height
@@ -93,7 +117,7 @@ module CultOfGems
 
     def set(x,y,obj)
       column = @grid[x]
-      return column[y] = obj if y < column.size
+      return column[y] = obj if column && y < column.size
       nil
     end
 
