@@ -66,7 +66,11 @@ module CultOfGems
 
     def draw
       # puts "[CULT OF GEMS] [#{self.class.to_s}] Draw..."
-      @background.draw(0,0,LayerOrder::Background) if @background
+      if @background
+        @background.draw(0,0,LayerOrder::Background)
+      else
+        draw_background_color
+      end
       @player.draw
       @victims.each{|f| f.draw }
       @gems.each{|f| f.draw }
@@ -104,6 +108,33 @@ module CultOfGems
           border_img.draw(mx, py, layer)
         end
       end
+    end
+
+    def draw_background_color
+      layer = LayerOrder::Background
+
+      ox = @tile_width
+      oy = @tile_height
+      mx = (@grid_width  + 1) << @tile_width_shift
+      my = (@grid_height + 1) << @tile_height_shift
+
+      @window.draw_quad( 
+          0,              0,              0xFFAAAAAA,
+          @window.width,  0,              0xFF888888,
+          0,              @window.height, 0xFF666666,
+          @window.width,  @window.height, 0xFF444444,
+          layer
+        )
+
+      @window.draw_quad( 
+          ox, oy, 0xFF888888,
+          mx, oy, 0xFF666666,
+          ox, my, 0xFF444444,
+          mx, my, 0xFF222222,
+          layer
+        )
+
+
     end
 
   end
