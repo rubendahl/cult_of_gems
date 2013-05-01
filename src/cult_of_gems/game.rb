@@ -16,15 +16,16 @@ module CultOfGems
       @tile_height_shift = Math.log(@tile_height)/Math.log(2)
       @tile_width_shift  = Math.log(@tile_width)/Math.log(2)
 
-      @grid_height = (window.height / @tile_height).to_i - 2
-      @grid_width  = (window.width  / @tile_width).to_i - 2
+
+      @grid_height = (window.height / @tile_height).to_i - 2 - 2
+      @grid_width  = (window.width  / @tile_width).to_i - 2 
 
       @map = Map.new(self, @grid_width, @grid_height)
 
-      @images = Gosu::Image.load_tiles(@window, GameResources::GAME_TILES, -5, -4, true)
+      @images = Gosu::Image.load_tiles(@window, GameResources::GAME_TILES, -5, -5, true)
       @font = Gosu::Font.new(@window, Gosu::default_font_name, 20)
       @background = @window.record(@window.width, @window.height){ self.create_background } # , GameResources::SPRITES, true) 
-
+      ### @background.save("res/drawable/background-cached.png") if @background && !defined?(Ruboto)
 
       @player = Leader.new(self, @images[0])
       @player.warp(@grid_width/2 - 1, @grid_height -1)
@@ -77,19 +78,24 @@ module CultOfGems
 
 
     def create_background
-      border_img = @images[6]
+      border_img = @images[15]
+      back_imgs  = [11,11,11,10,12,12,12,10].collect{|i| @images[i]}
+
+      layer = LayerOrder::Background
       mx = (@grid_width  + 1) << @tile_width_shift
       my = (@grid_height + 1) << @tile_height_shift
 
-      (0..@grid_width).each do |x|
+      (0..@grid_width+1).each do |x|
         px = x << @tile_width_shift
         (0..@grid_height).each do |y|
           py = y << @tile_height_shift
-          border_img.draw(px,  0, LayerOrder::Background)
-          border_img.draw( 0, py, LayerOrder::Background)
+          border_img.draw(px,  0, layer)
+          border_img.draw( 0, py, layer)
 
-          border_img.draw(px, my, LayerOrder::Background)
-          border_img.draw(mx, py, LayerOrder::Background)
+          back_imgs[ y & 7 ].draw(px, py, layer)
+
+          border_img.draw(px, my, layer)
+          border_img.draw(mx, py, layer)
         end
       end
     end

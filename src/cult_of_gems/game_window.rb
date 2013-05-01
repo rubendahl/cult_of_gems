@@ -16,6 +16,7 @@ module CultOfGems
 
     def draw
       @game.draw
+      draw_buttons
     end
 
 
@@ -47,6 +48,31 @@ module CultOfGems
         @game.player.impulse=(:turn_right) if GameResources::KEY_MAP[:right].include?(id)
         @game.close if GameResources::KEY_MAP[:back].include?(id)
       end
+
+    end
+
+
+    def draw_buttons
+      midx = width >> 1
+      midy = height - 32
+      topy = height - 64
+
+      pressed = @game.player.impulse || @game.player.intent
+      lcol = (pressed && pressed == :turn_left) ?  0xFF888888 : 0xFFFFFFFF
+      rcol = (pressed && pressed == :turn_right) ? 0xFF888888 : 0xFFFFFFFF
+
+
+      self.draw_triangle(
+          5,      midy,   0xFF00FF00 & lcol, 
+          midx-5, topy,   0xFF0000FF & lcol, 
+          midx-5, height, 0xFFFF0000 & lcol,
+          LayerOrder::UI )
+
+      self.draw_triangle(
+          width-5,  midy,   0xFF00FF00 & rcol, 
+          midx+5,   topy,   0xFFFF0000 & rcol, 
+          midx+5,   height, 0xFF0000FF & rcol,
+          LayerOrder::UI )
 
     end
 
