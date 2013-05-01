@@ -16,7 +16,7 @@ module CultOfGems
 
     def draw
       @game.draw
-      # draw_buttons
+      draw_buttons
     end
 
 

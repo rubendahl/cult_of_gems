@@ -11,6 +11,12 @@ module CultOfGems
     def initialize(window)
       puts ("\n" * 10) + ("="*20) + "\n[CULT OF GEMS] Creating game..."
       @window = window
+
+      @background = nil
+      #with_large_stack(512) do
+      # @background = Gosu::Image.new(@window, GameResources::BACKGROUND, true)
+      #end
+
       
       @tile_height = @tile_width = 32 # (defined?(Ruboto) ? 64 : 32) # WHAT?
       @tile_height_shift = Math.log(@tile_height)/Math.log(2)
@@ -25,7 +31,6 @@ module CultOfGems
       @images = Gosu::Image.load_tiles(@window, GameResources::GAME_TILES, -5, -5, true)
       @font = Gosu::Font.new(@window, Gosu::default_font_name, 20)
 
-      # @background = Gosu::Image.new(@window, GameResources::BACKGROUND, true)
       # @background = @window.record(@window.width, @window.height){ self.create_background }
       # @background.save("res/drawable/background-cached.png") if @background && !defined?(Ruboto)
 
@@ -61,15 +66,15 @@ module CultOfGems
 
     def draw
       # puts "[CULT OF GEMS] [#{self.class.to_s}] Draw..."
-      #@background.draw(0,0,LayerOrder::Background) if @background
+      @background.draw(0,0,LayerOrder::Background) if @background
       @player.draw
       @victims.each{|f| f.draw }
       @gems.each{|f| f.draw }
 
 
       score_str = "Score: #{@player.score} - Record: #{@player.max_score}"
-      @font.draw( score_str, 1, 1, LayerOrder::UI, 1.5, 1.5, 0xff000000 )
-      @font.draw( score_str, 0, 0, LayerOrder::UI, 1.5, 1.5, 0xffffff00 )
+      @font.draw( score_str, 1, 1, LayerOrder::UI, 1, 1, 0xff000000 )
+      @font.draw( score_str, 0, 0, LayerOrder::UI, 1, 1, 0xffffff00 )
 
     end
 
