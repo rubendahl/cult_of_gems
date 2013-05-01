@@ -1,6 +1,6 @@
 module CultOfGems  
   class Leader
-    attr_reader :followers, :score
+    attr_reader :followers, :score, :max_score
 
     attr_accessor :intent, :impulse
 
@@ -19,7 +19,7 @@ module CultOfGems
       @direction = 0
 
       @x = @y = 0
-      @score = 0
+      @score = @max_score = 0
 
     end
 
@@ -36,24 +36,31 @@ module CultOfGems
       move = DIRECTION_DELTAS[@direction]
       nx = @x + move[:dx]
       ny = @y + move[:dy]
-      if nx <1 || ny < 1 || nx > @game.grid_width || ny > @game.grid_height
+      if self.blocked?(nx,ny)
         if @intent && [:turn_left, :turn_right].include?(@intent)
           self.send(@intent)
           @intent = nil
         else # BOOM!
           puts "CRASH!"
+          @followers.each{|f| f.active = false}
           @followers.clear
+          @max_score = @score if @score > @max_score
           @score >>= 1
         end
         return
       end
+      @game.map.set(@x, @y, nil)
       @followers << Follower.new(@game, @x, @y)  # BAAAAD! SLOOOW! Do circular buffer instead.
       @score += @followers.size
-      # @followers.pop # Remove the last one...
-
       @x = nx
       @y = ny
+      @game.map.set(@x, @y, self)
     end
+
+    def blocked?(nx, ny)
+      @game.map.blocked?(nx,ny)
+    end
+
 
     def turn_left
       @direction = (@direction - 1 ) & 0x3

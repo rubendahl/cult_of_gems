@@ -46,13 +46,19 @@ module CultOfGems
   end
 
   class Follower
-    attr_accessor :x, :y, :active, :image
+    attr_accessor :x, :y, :image
+    attr_reader :active
     def initialize(game, x, y, image = nil)
       @game = game
       @x = x
       @y = y
       @image = image || @game.images[1]
-      @active = true
+      self.active = true
+    end
+
+    def active=(active)
+      @active = active
+      @game.map.set(@x, @y, (@active ? self : nil))
     end
 
     def draw

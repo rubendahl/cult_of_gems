@@ -1,6 +1,6 @@
 module CultOfGems
 
-    class GameWindow < Gosu::Window
+  class GameWindow < Gosu::Window
     def initialize
       puts "[CULT OF GEMS] Creating window...."
       full_screen = true # Not working?
@@ -15,19 +15,7 @@ module CultOfGems
     end
 
     def draw
-      # print "."
       @game.draw
-      #@stars.each { |star| star.draw }
-    end
-
-    def button_down(id)
-      case id
-      when Gosu::KbEscape
-        close
-      else
-        @game.player.intent=(:turn_left)  if GameResources::KEY_MAP[:left].include?(id)
-        @game.player.intent=(:turn_right) if GameResources::KEY_MAP[:right].include?(id)
-      end
     end
 
 
@@ -40,7 +28,7 @@ module CultOfGems
         end
       end
 
-      def touch_began(touch)
+      def touch_ended(touch)
         if touch.y > @window.height >> 1
           @game.player.impulse=(:turn_left)  if touch.x < @window.width >> 1
           @game.player.impulse=(:turn_right) if touch.x > @window.width >> 1
