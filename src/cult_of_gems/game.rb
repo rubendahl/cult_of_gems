@@ -58,7 +58,7 @@ module CultOfGems
 
     def draw
       # puts "[CULT OF GEMS] [#{self.class.to_s}] Draw..."
-      @background.draw(0,0,LayerOrder::Background)
+      @background.draw(0,0,LayerOrder::Background) if @background
       #create_background
       @player.draw
       @victims.each{|f| f.draw }
