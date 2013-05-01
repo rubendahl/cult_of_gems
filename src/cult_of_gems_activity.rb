@@ -48,7 +48,7 @@ class CultOfGemsMainMenuActivity
     super
     # Gosu::AndroidInitializer.instance.start(self)
 
-    set_title 'Cult of Gems'
+    # set_title 'Cult of Gems'
 
     self.content_view =
         linear_layout :orientation => :vertical do
