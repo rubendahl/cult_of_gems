@@ -24,15 +24,15 @@ module CultOfGems
 
       def touch_began(touch)
         if touch.y > @height >> 1
-          @game.player.intent=(:turn_left) if  touch.x < @width >> 1
-          @game.player.intent=(:turn_right) if touch.x > @width >> 1
+          @game.player.impulse=(:turn_left)  if touch.x < @width >> 1
+          @game.player.impulse=(:turn_right) if touch.x > @width >> 1
         end
       end
 
       def touch_ended(touch)
         if touch.y > @height >> 1
-          @game.player.impulse=(:turn_left)  if touch.x < @width >> 1
-          @game.player.impulse=(:turn_right) if touch.x > @width >> 1
+          @game.player.intent=(:turn_left) if  touch.x < @width >> 1
+          @game.player.intent=(:turn_right) if touch.x > @width >> 1
         end
       end
 
