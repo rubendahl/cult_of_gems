@@ -33,7 +33,7 @@ module CultOfGems
         :back   => [ KbEscape ]
       }
     else
-      GAME_TILES = 'res/drawable/gametiles.png'
+      GAME_TILES = 'res/drawable-nodpi/gametiles.png'
       BACKGROUND = 'res/drawable-nodpi/background.png'
       KEY_MAP = {
         :left   => [ Gosu::KbLeft  ],
