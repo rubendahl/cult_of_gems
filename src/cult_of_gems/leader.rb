@@ -23,8 +23,7 @@ module CultOfGems
       @y = y
       @score = @max_score = 0
 
-      10.times{|i| @followers << Follower.new(@game, @x, @y) }
-
+      @following = Following.new(self, 10, game)
     end
 
     def warp(x, y)
@@ -34,7 +33,9 @@ module CultOfGems
     def update
       if @impulse
         self.send(@impulse)
+        @intent = @impulse
         @impulse = nil
+      else
         @intent = nil
       end
       move = DIRECTION_DELTAS[@direction]
@@ -51,33 +52,20 @@ module CultOfGems
         ny = @y
         if @intent && [:turn_left, :turn_right].include?(@intent)
           self.send(@intent)
-          @intent = nil
+          #@intent = nil
         else # BOOM!
           puts "CRASH!"
-          @followers.each{|f| f.active = false }
-          @followers.clear
+          @following.clear
           @max_score = @score if @score > @max_score
           @score >>= 1
         end
       else 
-      #@new_follower = Follower.new(@game, @x, @y)
-        last_follower = @followers.pop
-        fx = last_follower ? last_follower.x : @x
-        fx = last_follower ? last_follower.y : @y
-
         if @num_new_followers 
-          @num_new_followers.times do
-            @followers.unshift Follower.new(@game, fx, fx)
-          end
+          @following.add_new_followers(@num_new_followers)
           @num_new_followers = nil
         end
-        if last_follower && last_follower.active?
-          last_follower.warp(@x, @y)
-          @followers.unshift last_follower
-        end
+        @following.update_last_follower(@x, @y)
       end
-
-      @followers.delete_if{|f| !f.active}
       
       @score += @followers.size
       @x = nx
@@ -110,8 +98,8 @@ module CultOfGems
           @x * @game.tile_width, 
           @y * @game.tile_height, 
           LayerOrder::Leader
-        )#, @direction * 90)
-      @followers.each{|f| f.draw }      
+        )#, @direction * 90)  
+      @following.draw   
     end
 
   end

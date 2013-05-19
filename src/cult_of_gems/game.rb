@@ -23,7 +23,7 @@ module CultOfGems
       @tile_width_shift  = Math.log(@tile_width)/Math.log(2)
 
 
-      @grid_height = (window.height / @tile_height).to_i - 2 - 2
+      @grid_height = (window.height / @tile_height).to_i - 2 - 4
       @grid_width  = (window.width  / @tile_width).to_i - 2 
 
       @map = Map.new(self, @grid_width, @grid_height)
@@ -33,6 +33,8 @@ module CultOfGems
 
       # @background = @window.record(@window.width, @window.height){ self.create_background }
       # @background.save("res/drawable/background-cached.png") if @background && !defined?(Ruboto)
+
+      precalc_draw_background_color
 
       @player = Leader.new(self, @images[0])
       @player.warp(@grid_width/2 - 1, @grid_height -1)
@@ -110,7 +112,7 @@ module CultOfGems
       end
     end
 
-    def draw_background_color
+    def precalc_draw_background_color
       layer = LayerOrder::Background
 
       ox = @tile_width
@@ -118,24 +120,29 @@ module CultOfGems
       mx = (@grid_width  + 1) << @tile_width_shift
       my = (@grid_height + 1) << @tile_height_shift
 
-      @window.draw_quad( 
+      @bg_draw = [
+        [
           0,              0,              0xFFAAAAAA,
           @window.width,  0,              0xFF888888,
           0,              @window.height, 0xFF666666,
           @window.width,  @window.height, 0xFF444444,
           layer
-        )
-
-      @window.draw_quad( 
+        ],
+        [
           ox, oy, 0xFF888888,
           mx, oy, 0xFF666666,
           ox, my, 0xFF444444,
           mx, my, 0xFF222222,
           layer
-        )
-
-
+        ]
+      ]
     end
+
+    def draw_background_color
+      @window.draw_quad(*@bg_draw.first)
+      @window.draw_quad(*@bg_draw.last)
+    end
+
 
   end
 

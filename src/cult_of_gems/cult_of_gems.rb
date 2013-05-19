@@ -73,11 +73,13 @@ module CultOfGems
 
     def active=(active)
       @game.map.set(@x, @y, (active ? self : nil)) unless @active == active
+      @view_x = self.x * @game.tile_width
+      @view_y = self.y * @game.tile_height
       @active = active
     end
 
     def draw
-      @image.draw(self.x * @game.tile_width, self.y * @game.tile_height, LayerOrder::Followers) if @active
+      @image.draw(@view_x, @view_y, LayerOrder::Followers) if @active
     end
 
     def consumable?
@@ -140,6 +142,48 @@ module CultOfGems
   end
 
   class Following
+    def initialize(leader, num_start, game, max_num = 128)
+      @num_active = num_start
+      @num_new_followers = 0
+      @followers = []
+      @game = game
+      @leader = leader
+      @num_active.times{|i| @followers << Follower.new(@game, leader.x, leader.y) }
+    end
+
+    def update_last_follower(x,y)
+      last_follower = @followers.pop
+      fx = last_follower ? last_follower.x : x
+      fy = last_follower ? last_follower.y : y
+
+      create_new_followers(fx, fy)
+
+      if last_follower && last_follower.active?
+        last_follower.warp(x, y)
+        @followers.unshift last_follower
+      end
+    end
+
+    def add_new_followers(num_new_followers)
+      @num_new_followers += num_new_followers
+    end
+
+    def create_new_followers(fx, fy)
+      @num_new_followers.times do
+        @followers.unshift Follower.new(@game, fx, fy)
+      end
+      @num_new_followers = 0
+    end
+
+    def clear
+      @followers.each{|f| f.active = false }
+      @followers.clear
+    end
+
+
+    def draw
+      @followers.each{|f| f.draw } 
+    end
   end
 
 end
